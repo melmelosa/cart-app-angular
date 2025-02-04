@@ -1,0 +1,9 @@
+<div class="card h-100">
+  <div class="card-body d-flex flex-column" style="text-align: center;">
+    <h5 class="card-title">{{ productCart.name }}</h5>
+    <p class="card-text">{{ productCart.description }}</p>
+    <img src="https://i.imgur.com/rjMXQhK.png" alt="imagen" width="100%" height="auto">
+    <p class="card-text"><b>Precio: {{ productCart.price }} €</b></p>
+    <button class="btn btn-outline-primary mt-auto" (click)="addCart(productCart)">Añadir al carro</button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<h2>Catalogo de Productos</h2>
+<catalogo [productsCatalogo]="productos" (productAdded)="addCart($event)"></catalogo>
+
+@if (itemsCarro.length > 0) {
+<cart [itemsCart]="itemsCarro" [subtotal]="total" 
+(productDeletedEmmiter)="removeCart($event)"></cart>
+
+}
+@else {
+    <div class="alert alert-warning">El carro está vacio</div>
+}
