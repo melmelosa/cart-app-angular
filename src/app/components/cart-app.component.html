@@ -1,11 +1,30 @@
 <h2>Catalogo de Productos</h2>
-<catalogo [productsCatalogo]="productos" (productAdded)="addCart($event)"></catalogo>
+<div class="text-end">
+  <button class="btn btn-outline-danger" (click)="openCart()" >
+    {{ showCart ? 'Ocultar Carro' : 'Ver Carro ('+ itemsCarro.length + ')'  }} 
+    
+  </button>
+</div>
 
-@if (itemsCarro.length > 0) {
-<cart [itemsCart]="itemsCarro" [subtotal]="total" 
-(productDeletedEmmiter)="removeCart($event)"></cart>
+<div class="row">
+  <div [className]="showCart ? 'col-8' : 'col' ">
+    <catalogo
+      [productsCatalogo]="productos"
+      (productAdded)="addCart($event)"
+    ></catalogo>
+  </div>
+  @if(showCart){
+  <div class="col-4">
+    @if (itemsCarro.length > 0) {
+    <cart
+      [itemsCart]="itemsCarro"
+      [subtotal]="total"
+      (productDeletedEmmiter)="removeCart($event)"
+    ></cart>
 
-}
-@else {
+    } @else {
     <div class="alert alert-warning">El carro está vacio</div>
-}
+    }
+  </div>
+  }
+</div>

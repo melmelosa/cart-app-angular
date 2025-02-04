@@ -19,6 +19,7 @@ export class CartAppComponent implements OnInit {
   productos: Product[] = []; //productos para el CATALOGO
   itemsCarro: CartItem[] = []; // productos para el CARRO
   total : number = 0;
+  showCart :boolean = false; 
 
   constructor(private service: ProductService) {
 
@@ -30,7 +31,7 @@ export class CartAppComponent implements OnInit {
     
     
   }
-
+  // AÑADIR ITEM AL CARRO
   addCart(producto: Product) : void {
     // console.log("Producto seleccionado para añadir: ", producto)
     //compruebo si el producto ha sido añadido al carro 
@@ -62,8 +63,6 @@ export class CartAppComponent implements OnInit {
     console.log( this.itemsCarro);
    this.calculateTotalCart();
    this.saveSession();
-    
-    
   }
 
   //CALCULA EL TOTAL DEL CARRO 
@@ -73,11 +72,14 @@ export class CartAppComponent implements OnInit {
     console.log("El total ahora es:" , this.total)
   }
 
-
   //GUARDA EL CARRO DE COMPRA EN STORAGE
   saveSession() : void {
   sessionStorage.setItem('cart', JSON.stringify(this.itemsCarro))
-    
+  }
+
+  //MUESTRA/OCULTA EL CARRO SEGUN FLAG
+  openCart(): void{
+    this.showCart = !this.showCart;
   }
 
 
