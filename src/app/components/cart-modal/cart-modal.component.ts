@@ -14,14 +14,14 @@ export class CartModalComponent {
   @Input() totalModal : number = 0;
 
   @Output() productDeletedEmmiter = new EventEmitter();
-  @Output() openCloseCartEmmiter = new EventEmitter();
+  @Output() closeCartEmmiter = new EventEmitter();
 
   removeCart(id:number): void {
     this.productDeletedEmmiter.emit(id);
   }
 
   //CERRAR MODAL
-  openCart(): void {
-    this.openCloseCartEmmiter.emit();
+  closeCart(): void {
+    this.closeCartEmmiter.emit();
   }
 }
