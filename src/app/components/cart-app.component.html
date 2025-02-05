@@ -1,30 +1,35 @@
-<h2>Catalogo de Productos</h2>
-<div class="text-end">
-  <button class="btn btn-outline-danger" (click)="openCart()" >
-    {{ showCart ? 'Ocultar Carro' : 'Ver Carro ('+ itemsCarro.length + ')'  }} 
-    
-  </button>
-</div>
 
-<div class="row">
-  <div [className]="showCart ? 'col-8' : 'col' ">
-    <catalogo
-      [productsCatalogo]="productos"
-      (productAdded)="addCart($event)"
-    ></catalogo>
-  </div>
-  @if(showCart){
-  <div class="col-4">
-    @if (itemsCarro.length > 0) {
-    <cart
-      [itemsCart]="itemsCarro"
-      [subtotal]="total"
-      (productDeletedEmmiter)="removeCart($event)"
-    ></cart>
+<navbar [itemsCarroNav]="totalItems" (openCloseCartEmmiter)="openCloseCart()"></navbar>
 
-    } @else {
-    <div class="alert alert-warning">El carro está vacio</div>
-    }
-  </div>
+<div class="container">
+  <div class="row">
+    <div [className]="showCart ? 'col-8' : 'col'">
+      <catalogo
+        [productsCatalogo]="productos"
+        (productAdded)="addCart($event)"
+      ></catalogo>
+    </div>
+
+    @if(showCart){
+    <div class="col-4">
+      <div class="text-end pt-4">
+        <button class="btn btn-danger" (click)="openCloseCart()">X</button>
+      </div>
+      @if (itemsCarro.length > 0) {
+      <cart
+        [itemsCart]="itemsCarro"
+        [totalCart]="total"
+        (productDeletedEmmiter)="removeCart($event)"
+      ></cart>
+
+      } @else {
+      <div class="alert alert-warning mt-3">El carro está vacio</div>
+      }
+    </div>
+
+     <!-- <cart-modal [itemsCartModal]="itemsCarro"
+    [totalModal]="total" (openCloseCartEmmiter)="openCloseCart()"></cart-modal>
+    } -->
   }
+  </div>
 </div>

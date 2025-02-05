@@ -4,13 +4,15 @@ import { ProductService } from '../services/product.service';
 import { CatalogoComponent } from './catalogo/catalogo.component';
 import { CartComponent } from './cart/cart.component';
 import { CartItem } from '../models/cartItem';
+import { NavbarComponent } from './navbar/navbar.component';
+import { CartModalComponent } from './cart-modal/cart-modal.component';
 
 
 
 @Component({
   selector: 'cart-app',
   standalone: true,
-  imports: [CatalogoComponent, CartComponent],
+  imports: [CatalogoComponent, CartComponent, NavbarComponent, CartModalComponent],
   templateUrl: './cart-app.component.html',
 
 })
@@ -18,17 +20,19 @@ export class CartAppComponent implements OnInit {
 
   productos: Product[] = []; //productos para el CATALOGO
   itemsCarro: CartItem[] = []; // productos para el CARRO
-  total : number = 0;
-  showCart :boolean = false; 
+  total : number = 0; //importe total
+  totalItems : number = 0; //total items en carro
+  showCart :boolean = false; //flag para mostrar/ocultar carro
 
   constructor(private service: ProductService) {
 
   }
+
   ngOnInit(): void {
     this.productos = this.service.findAll();
-    this.itemsCarro = JSON.parse(sessionStorage.getItem('cart')!)// ! para que sea opcional (si devuelve null--> carro vacio)
+    this.itemsCarro = JSON.parse(sessionStorage.getItem('cart') || '[]')// si es null array vacio
     this.calculateTotalCart(); //si quedaron articulos en el carro, calcula el valor
-    
+    this.countItems(); 
     
   }
   // AÑADIR ITEM AL CARRO
@@ -52,6 +56,7 @@ export class CartAppComponent implements OnInit {
       this.itemsCarro = [...this.itemsCarro, { quantity: 1, product: { ...producto } }];
     }
     this.calculateTotalCart();
+    this.countItems();
     this.saveSession();
   }
 
@@ -62,6 +67,7 @@ export class CartAppComponent implements OnInit {
     })
     console.log( this.itemsCarro);
    this.calculateTotalCart();
+   this.countItems();
    this.saveSession();
   }
 
@@ -71,6 +77,10 @@ export class CartAppComponent implements OnInit {
       totalAcumulado + (item.quantity * item.product.price ), 0 );
     console.log("El total ahora es:" , this.total)
   }
+  countItems(){
+    this.totalItems = this.itemsCarro.reduce((totalItems, item) =>
+      totalItems + item.quantity, 0)
+  }
 
   //GUARDA EL CARRO DE COMPRA EN STORAGE
   saveSession() : void {
@@ -78,7 +88,7 @@ export class CartAppComponent implements OnInit {
   }
 
   //MUESTRA/OCULTA EL CARRO SEGUN FLAG
-  openCart(): void{
+  openCloseCart(): void{
     this.showCart = !this.showCart;
   }
 
