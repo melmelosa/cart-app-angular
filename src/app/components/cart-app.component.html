@@ -1,21 +1,8 @@
 <navbar
-  [itemsCarroNav]="totalItems"
-  (openCloseCartEmmiter)="openCloseCart()"
+  [totalItemsCarro]="totalItems"
+  [itemsCarroNav]="itemsCarro"
+  [totalCarro]="total"
 ></navbar>
-
 <div class="container">
-  <div class="row">
-    <catalogo
-      [productsCatalogo]="productos"
-      (productAdded)="addCart($event)"
-    ></catalogo>
-
-    @if(showCart){
-   
-    <cart-modal [itemsCartModal]="itemsCarro"
-    [totalModal]="total" 
-    (closeCartEmmiter)="openCloseCart()"
-    (productDeletedEmmiter)="removeCart($event)"></cart-modal>
-    }
-  </div>
+  <router-outlet></router-outlet>
 </div>

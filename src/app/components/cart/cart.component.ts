@@ -1,5 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { CartItem } from '../../models/cartItem';
+import { Router } from '@angular/router';
+import { SharingDataService } from '../../services/sharing-data.service';
+
 
 @Component({
   selector: 'cart',
@@ -10,12 +13,18 @@ import { CartItem } from '../../models/cartItem';
 })
 export class CartComponent {
 
-  @Input() itemsCart : CartItem[] = [];
-  @Input() totalCart : number = 0;
-  @Output() productDeletedEmmiter = new EventEmitter();
+  itemsCart: CartItem[] = [];
+  totalCart: number = 0;
+ 
 
-  removeCart(id: number){
-    this.productDeletedEmmiter.emit(id);
+  //OBTENER LOS ITEMS DEL COMPONENTE NAVBAR
+  constructor(private router : Router, 
+    private _sharingDataService : SharingDataService ){
+    this.itemsCart = this.router.getCurrentNavigation()?.extras.state?.['items'];
+    this.totalCart = this.router.getCurrentNavigation()?.extras.state?.['totalCarro']
+  }
 
+  removeCart(id: number) {
+    this._sharingDataService.productDeletedEmitter.emit(id)
   }
 } 

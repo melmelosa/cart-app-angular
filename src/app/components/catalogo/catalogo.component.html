@@ -1,6 +1,6 @@
 <h2 class="mt-3">Catálogo de Productos</h2>
 <div class="row">
-  @for(productCatalogo of productsCatalogo; track $index){
+  @for(productCatalogo of productosCatalogo; track $index){
   <div class="col-4 my-2">
     <product-cart [productCart]="productCatalogo" (productAdded)="addCart($event)"></product-cart>
   </div>
