@@ -26,7 +26,7 @@ export const ITEMS_REDUCER = createReducer(
             return {
                 itemsCarro: state.itemsCarro.map((item: CartItem) => {
                     if (item.product.id == productoAccion.id) {
-                        item.quantity++
+                       return { ...item, quantity: item.quantity + 1 }; //Se crea una nueva copia con la cantidad actualizada
                     }
                     return item;
                 }),
@@ -42,7 +42,7 @@ export const ITEMS_REDUCER = createReducer(
     }),
     on(REMOVE, (state, { idAccion }) => {
         return {
-            itemsCarro: state.itemsCarro = state.itemsCarro.filter((item: CartItem) => {
+            itemsCarro: state.itemsCarro.filter((item: CartItem) => {
                 return item.product.id !== idAccion
             }),
             total: state.total

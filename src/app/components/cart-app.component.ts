@@ -6,6 +6,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { SharingDataService } from '../services/sharing-data.service';
 import { Store } from '@ngrx/store';
+import { ItemsState } from '../store/items.reducer';
+import { ADD, REMOVE, TOTAL } from '../store/items.actions';
 
 @Component({
   selector: 'cart-app',
@@ -16,19 +18,26 @@ import { Store } from '@ngrx/store';
 })
 
 export class CartAppComponent implements OnInit {
-  
+
   productos: Product[] = []; //productos para el CATALOGO
   itemsCarro: CartItem[] = []; // productos para el CARRO
   total: number = 0; //importe total
   totalItems: number = 0; //total items en carro
 
-  constructor(private service: ProductService,
-    private sharingDataService: SharingDataService,
-    private router: Router) { }
+  constructor(
+    private router: Router,
+    private store: Store<{ items: ItemsState }>,
+    private sharingDataService: SharingDataService) {
+      this.store.select('items').subscribe(state => {
+        this.itemsCarro = state.itemsCarro;
+        this.total = state.total;
+      })
+     }
 
   ngOnInit(): void {
-    this.itemsCarro = JSON.parse(sessionStorage.getItem('cart') || '[]')
-    //this.calculateTotalCart(); //si quedaron articulos en el carro, calcula el valor
+    this.store.dispatch(TOTAL());
+
+   
     this.countItems();
 
     this.removeCart();
@@ -37,27 +46,11 @@ export class CartAppComponent implements OnInit {
   }
   // AÑADIR ITEM AL CARRO
   addCart(): void {
+    //obtenemos el producto
     this.sharingDataService.productAddedEmmiter.subscribe(producto => {
-      //TODO ESTE CÓDIGO PASA A EL REDUCER (items.reducer.ts)
-      // //compruebo si el producto ha sido añadido al carro 
-      // const isAdded = this.itemsCarro.find(item => {
-      //   return item.product.id == producto.id
-      // });
-      // //si está añadido aumento la cantidad sólo del seleccionado
-      // if (isAdded) {
-      //   const cartModified = this.itemsCarro.map(item => {
-      //     if (item.product.id == producto.id) {
-      //       item.quantity++
-      //     }
-      //     return item;
-      //   })
-      // }
-      // else {
-      //   //hace una copia de la instancia actual, y copia el producto (referencia distinta--- INMUTABILIDAD)
-      //   this.itemsCarro = [...this.itemsCarro, { quantity: 1, product: { ...producto } }];
-      // }
+      this.store.dispatch(ADD({ productoAccion: producto }));
+      this.store.dispatch(TOTAL());
 
-     //this.calculateTotalCart();
       this.countItems();
       this.saveSession();
 
@@ -68,12 +61,9 @@ export class CartAppComponent implements OnInit {
   //ELIMINAR ITEM DEL CARRO
   removeCart(): void {
     this.sharingDataService.productDeletedEmitter.subscribe(id => {
-      // TODO ESTE CÓDIGO PASA AL REDUCER (items.reducer.ts)
-      // this.itemsCarro = this.itemsCarro.filter(item => {
-      //   return item.product.id !== id
-      // })
-      console.log(this.itemsCarro);
-      //this.calculateTotalCart();
+      this.store.dispatch(REMOVE( {idAccion : id} ));
+      this.store.dispatch(TOTAL());
+    
       this.countItems();
       this.saveSession();
 
@@ -88,18 +78,12 @@ export class CartAppComponent implements OnInit {
 
   }
 
-  //CALCULA EL TOTAL DEL CARRO 
-  // TODO ESTE CODIGO SE PARA AL REDUCER (item.reducer.ts)
-  // calculateTotalCart(): void {
-  //   this.total = this.itemsCarro.reduce((totalAcumulado, item) =>
-  //     totalAcumulado + (item.quantity * item.product.price), 0);
-  // }
   countItems() {
     this.totalItems = this.itemsCarro.reduce((totalItems, item) =>
       totalItems + item.quantity, 0)
   }
 
-  //GUARDA EL CARRO DE COMPRA EN STORAGE
+  //GUARDA EL CARRO DE COMPRA EN SESSIONSTORAGE
   saveSession(): void {
     sessionStorage.setItem('cart', JSON.stringify(this.itemsCarro))
   }
