@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { products } from '../data/product.data';
+import { Observable, of } from 'rxjs';
 
 
 @Injectable({
@@ -10,7 +11,11 @@ export class ProductService {
 
   constructor() { }
 
-  findAll() : Product [] {
-    return products;
+  findAll() : Observable<Product[]>{
+    return of(products);
   }
+
+  // findAll() : Product [] {
+  //   return products;
+  // }
 }

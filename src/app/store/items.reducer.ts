@@ -42,6 +42,7 @@ export const ITEMS_REDUCER = createReducer(
     }),
     on(REMOVE, (state, { idAccion }) => {
         return {
+            ...state, // Mantenemos todas las propiedades que ya tenía el estado
             itemsCarro: state.itemsCarro.filter((item: CartItem) => {
                 return item.product.id !== idAccion
             }),
@@ -50,6 +51,7 @@ export const ITEMS_REDUCER = createReducer(
     }),
     on(TOTAL, (state => {
         return {
+            ...state,
             itemsCarro: state.itemsCarro,
             total: state.itemsCarro.reduce((totalAcumulado, item) =>
                 totalAcumulado + (item.quantity * item.product.price), 0)

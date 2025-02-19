@@ -1,7 +1,9 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { CartItem } from '../../models/cartItem';
-import { Router } from '@angular/router';
 import { SharingDataService } from '../../services/sharing-data.service';
+import { ItemsState } from '../../store/items.reducer';
+import { Store } from '@ngrx/store';
+import { TOTAL } from '../../store/items.actions';
 
 
 @Component({
@@ -11,17 +13,24 @@ import { SharingDataService } from '../../services/sharing-data.service';
   templateUrl: './cart.component.html',
 
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
 
   itemsCart: CartItem[] = [];
   totalCart: number = 0;
- 
 
-  //OBTENER LOS ITEMS DEL COMPONENTE NAVBAR
-  constructor(private router : Router, 
-    private _sharingDataService : SharingDataService ){
-    this.itemsCart = this.router.getCurrentNavigation()?.extras.state?.['items'];
-    this.totalCart = this.router.getCurrentNavigation()?.extras.state?.['totalCarro']
+
+  constructor(
+    private _sharingDataService: SharingDataService,
+    //usar misma clave que defini en app.config
+    private store: Store<{ itemsReducer: ItemsState }>) {
+    this.store.select('itemsReducer').subscribe(state => {
+      this.itemsCart = state.itemsCarro;
+      this.totalCart = state.total;
+    })
+
+  }
+  ngOnInit(): void {
+   this.store.dispatch(TOTAL());
   }
 
   removeCart(id: number) {

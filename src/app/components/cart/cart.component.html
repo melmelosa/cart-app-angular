@@ -1,44 +1,54 @@
 <div class="card">
-    <div class="card-content">
-      <div class="card-header">
-        <h5>Carro de compra</h5>
-      </div>
-      <div class="card-body">
-        <table class="table table-stripped table-hover">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Total</th>
-                    <th>Eliminar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (item of itemsCart; track $index) {
-                    <tr>
-                        <td>{{item.product.name }} </td>
-                        <td>{{item.product.price }} </td>
-                        <td>{{item.quantity}} </td>
-                        <td>{{item.product.price * item.quantity}} </td>
-                        <td><button class="btn btn-outline-danger" 
-                            (click)="removeCart(item.product.id)">
-                            Eliminar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-           <tfoot>
-            <tr>
-                <td colspan="2"></td>
-                <td class="pt-4 fw-bold text-start">TOTAL</td>
-                <td colspan="2" class="pt-4 fw-bold text-start">{{totalCart}} € </td>
-            </tr>
-           </tfoot>
-        </table>
-        
-      </div>
+  <div class="card-content">
+    <div class="card-header">
+      <h5>Carro de compra</h5>
     </div>
-</div>
-  
 
+    <div class="card-body">
+      @if (itemsCart.length < 1 ) {
+      <div class="alert alert-warning">El carro está vacio</div>
+
+      }@else{
+      <table class="table table-stripped table-hover">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of itemsCart; track $index) {
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.product.price * item.quantity }}</td>
+            <td>
+              <button
+                class="btn btn-outline-danger"
+                (click)="removeCart(item.product.id)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <td colspan="2"></td>
+            <td class="pt-4 fw-bold text-start">TOTAL</td>
+            <td colspan="2" class="pt-4 fw-bold text-start">
+              {{ totalCart }} €
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      }
+    </div>
+  </div>
+</div>

@@ -13,6 +13,5 @@ export class NavbarComponent {
 
   @Input() itemsCarroNav: CartItem [] = []; // productos dentro del carro
   @Input() totalItemsCarro: number = 0; //cantidad de items en carro
-  @Input() totalCarro : number = 0; //importe total del carro
 
 }
